@@ -1,11 +1,12 @@
-ようこそ<%= @resource.email %>さん
+<%= @resource.email %>さん、gensokyo.cloudへようこそ！
 
 <%= @instance %>にアカウントが作成されました。
 
-以下のリンクをクリックしてMastodonアカウントのメールアドレスを確認してください。
+以下のリンクをクリックしてメールアドレスを確認してください。
 
 <%= confirmation_url(@resource, confirmation_token: @token) %>
 
 また、インスタンスの<%= link_to '利用規約', terms_url %>についてもご確認ください。
+よき幻想郷ライフを。
 
-<%= @instance %> チーム
+<%= @instance %> より
