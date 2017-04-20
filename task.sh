@@ -4,15 +4,16 @@
 if [ $# -lt 1 ]; then
   echo "Usage: ./task.sh <command>"
   echo ""
-  echo " copy <path>		: Copy file to instance."
-  echo " compile-assets		: Precompile assets."
-  echo " hot-restart		: Restart web server. (Hot restart)"
-  echo " migrate		: Migrate Database."
+  echo " copy <path>            : Copy file to instance."
+  echo " compile-assets         : Precompile assets."
+  echo " hot-restart            : Restart web server. (Hot restart)"
+  echo " migrate                : Migrate Database."
   echo ""
   exit 1
 fi
 
-
+# FIXME: Webサーバのスケールに対応できない
+# TODO: ちゃんと関数にする
 if [ $1 == "hot-restart" ]; then
   sudo docker exec -it mastodon_web_1 kill -SIGUSR2 1
 fi
