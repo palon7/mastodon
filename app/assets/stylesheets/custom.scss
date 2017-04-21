@@ -2,6 +2,14 @@
 
 @import 'application';
 
+.about-body h1 {
+  word-break: break-word;
+}
+
+.custom-title-legend {
+  font: 16px/28px 'Montserrat', sans-serif; padding-left: 10px; margin-left:15px; margin-bottom:15px; border-left: solid 3px #9baec8
+}
+
 .column-header {
     background: #81c784;
 }
