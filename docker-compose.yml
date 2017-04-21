@@ -3,7 +3,7 @@ services:
 
   db:
     restart: always
-    image: postgres:alpine
+    image: postgres:9.6-alpine
 ### Uncomment to enable DB persistance
     volumes:
       - ./postgres:/var/lib/postgresql/data
