@@ -18,9 +18,8 @@
   %h1
     = image_tag 'logo.png'
     = Setting.site_title
-
-  %p= t('about.about_mastodon').html_safe
-
+  .custom-title-legend
+    ――幻想郷は全てを受け入れるのよ。それはそれは残酷な話ですわ。
   .screenshot-with-signup
     .mascot= image_tag 'fluffy-elephant-friend.png'
 
@@ -38,6 +37,9 @@
           = link_to t('about.other_instances'), 'https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/List-of-Mastodon-instances.md'
           ·
           = link_to t('about.about_this'), about_more_path
+
+  %h3 Mastodonとは
+  %p= t('about.about_mastodon').html_safe
 
   %h3= t('about.features_headline')
 
