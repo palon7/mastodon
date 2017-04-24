@@ -47,7 +47,19 @@ services:
     build: .
     image: gargron/mastodon
     env_file: .env.production
-    command: bundle exec sidekiq -q default -q mailers -q pull -q push
+    command: bundle exec sidekiq -q default -q mailers -q pull
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./public/system:/mastodon/public/system
+
+  sidekiq_push:
+    restart: always
+    build: .
+    image: gargron/mastodon
+    env_file: .env.production
+    command: bundle exec sidekiq -q push
     depends_on:
       - db
       - redis
