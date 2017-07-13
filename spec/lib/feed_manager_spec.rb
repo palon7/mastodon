@@ -11,7 +11,7 @@ RSpec.describe FeedManager do
 
   describe '#filter?' do
     let(:alice) { Fabricate(:account, username: 'alice') }
-    let(:bob)   { Fabricate(:account, username: 'bob') }
+    let(:bob)   { Fabricate(:account, username: 'bob', domain: 'example.com') }
     let(:jeff)  { Fabricate(:account, username: 'jeff') }
 
     context 'for home feed' do
@@ -93,6 +93,14 @@ RSpec.describe FeedManager do
         status = PostStatusService.new.call(alice, 'Hey @jeff')
         expect(FeedManager.instance.filter?(:home, status, bob.id)).to be true
       end
+
+      it 'returns true for reblog of a personally blocked domain' do
+        alice.block_domain!('example.com')
+        alice.follow!(jeff)
+        status = Fabricate(:status, text: 'Hello world', account: bob)
+        reblog = Fabricate(:status, reblog: status, account: jeff)
+        expect(FeedManager.instance.filter?(:home, reblog, alice.id)).to be true
+      end
     end
 
     context 'for mentions feed' do
@@ -121,6 +129,19 @@ RSpec.describe FeedManager do
         bob.follow!(alice)
         expect(FeedManager.instance.filter?(:mentions, status, bob.id)).to be false
       end
+    end
+  end
+
+  describe '#push' do
+    it 'trims timelines if they will have more than FeedManager::MAX_ITEMS' do
+      account = Fabricate(:account)
+      status = Fabricate(:status)
+      members = FeedManager::MAX_ITEMS.times.map { |count| [count, count] }
+      Redis.current.zadd("feed:type:#{account.id}", members)
+
+      FeedManager.instance.push('type', account, status)
+
+      expect(Redis.current.zcard("feed:type:#{account.id}")).to eq FeedManager::MAX_ITEMS
     end
   end
 end

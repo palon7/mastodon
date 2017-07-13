@@ -9,3 +9,15 @@
   subscriptions_scheduler:
     cron: '0 5 * * *'
     class: Scheduler::SubscriptionsScheduler
+<<<<<<< HEAD
+=======
+  media_cleanup_scheduler:
+    cron: '5 4 * * *'
+    class: Scheduler::MediaCleanupScheduler
+  feed_cleanup_scheduler:
+    cron: '0 0 * * *'
+    class: Scheduler::FeedCleanupScheduler
+  doorkeeper_cleanup_scheduler:
+    cron: '1 1 * * 0'
+    class: Scheduler::DoorkeeperCleanupScheduler
+>>>>>>> 1.4.7

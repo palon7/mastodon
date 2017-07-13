@@ -9,11 +9,15 @@ module Mastodon
     end
 
     def minor
-      3
+      4
     end
 
     def patch
+<<<<<<< HEAD
       3
+=======
+      7
+>>>>>>> 1.4.7
     end
 
     def pre

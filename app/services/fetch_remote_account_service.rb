@@ -21,7 +21,11 @@ class FetchRemoteAccountService < BaseService
     xml = Nokogiri::XML(body)
     xml.encoding = 'utf-8'
 
+<<<<<<< HEAD
     account = author_from_xml(xml.at_xpath('/xmlns:feed', xmlns: TagManager::XMLNS))
+=======
+    account = author_from_xml(xml.at_xpath('/xmlns:feed', xmlns: TagManager::XMLNS), false)
+>>>>>>> 1.4.7
 
     UpdateRemoteProfileService.new.call(xml, account) unless account.nil?
 
