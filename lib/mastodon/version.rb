@@ -13,11 +13,7 @@ module Mastodon
     end
 
     def patch
-<<<<<<< HEAD
-      3
-=======
       7
->>>>>>> 1.4.7
     end
 
     def pre

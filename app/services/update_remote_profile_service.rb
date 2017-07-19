@@ -16,11 +16,7 @@ class UpdateRemoteProfileService < BaseService
 
     account.save_with_optional_media!
 
-<<<<<<< HEAD
-    Pubsubhubbub::SubscribeWorker.perform_async(account.id) if resubscribe && (account.hub_url != old_hub_url)
-=======
     Pubsubhubbub::SubscribeWorker.perform_async(account.id) if resubscribe && account.hub_url != old_hub_url
->>>>>>> 1.4.7
   end
 
   private

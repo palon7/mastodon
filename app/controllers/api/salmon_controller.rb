@@ -5,15 +5,8 @@ class Api::SalmonController < Api::BaseController
   respond_to :txt
 
   def update
-<<<<<<< HEAD
-    payload = request.body.read
-
-    if !payload.nil? && verify?(payload)
-      SalmonWorker.perform_async(@account.id, payload.force_encoding('UTF-8'))
-=======
     if verify_payload?
       process_salmon
->>>>>>> 1.4.7
       head 201
     else
       head 202
@@ -26,10 +19,6 @@ class Api::SalmonController < Api::BaseController
     @account = Account.find(params[:id])
   end
 
-<<<<<<< HEAD
-  def verify?(payload)
-    VerifySalmonService.new.call(payload)
-=======
   def payload
     @_payload ||= request.body.read
   end
@@ -40,6 +29,5 @@ class Api::SalmonController < Api::BaseController
 
   def process_salmon
     SalmonWorker.perform_async(@account.id, payload.force_encoding('UTF-8'))
->>>>>>> 1.4.7
   end
 end

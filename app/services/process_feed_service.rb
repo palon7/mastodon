@@ -46,12 +46,6 @@ class ProcessFeedService < BaseService
         Rails.logger.debug "Delete for status #{id} was queued, ignoring"
         return
       end
-<<<<<<< HEAD
-
-      Rails.logger.debug "Creating remote status #{id}"
-      status, just_created = status_from_xml(@xml)
-=======
->>>>>>> 1.4.7
 
       status, just_created = nil
 
@@ -170,14 +164,9 @@ class ProcessFeedService < BaseService
       [status, true]
     end
 
-<<<<<<< HEAD
-    def find_or_resolve_status(parent, uri, url)
-      status = find_status(uri)
-=======
     def find_or_create_conversation(xml)
       uri = xml.at_xpath('./ostatus:conversation', ostatus: TagManager::OS_XMLNS)&.attribute('ref')&.content
       return if uri.nil?
->>>>>>> 1.4.7
 
       if TagManager.instance.local_id?(uri)
         local_id = TagManager.instance.unique_tag_to_local_id(uri, 'Conversation')

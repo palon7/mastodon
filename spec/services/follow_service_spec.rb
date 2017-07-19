@@ -88,8 +88,6 @@ RSpec.describe FollowService do
       it 'subscribes to PuSH' do
         expect(a_request(:post, "http://hub.example.com/")).to have_been_made.once
       end
-<<<<<<< HEAD
-=======
     end
 
     describe 'already followed account' do
@@ -111,7 +109,6 @@ RSpec.describe FollowService do
       it 'does not subscribe to PuSH' do
         expect(a_request(:post, "http://hub.example.com/")).not_to have_been_made
       end
->>>>>>> 1.4.7
     end
   end
 end

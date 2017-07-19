@@ -2,10 +2,7 @@
 
 class ProcessInteractionService < BaseService
   include AuthorExtractor
-<<<<<<< HEAD
-=======
   include Authorization
->>>>>>> 1.4.7
 
   # Record locally the remote interaction with our user
   # @param [String] envelope Salmon envelope
