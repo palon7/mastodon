@@ -62,7 +62,7 @@ export default class UploadButton extends ImmutablePureComponent {
           ref={this.setRef}
           type='file'
           multiple={false}
-          accept={acceptContentTypes.toArray().join(',')}
+          accept={acceptContentTypes.toArray().join(',') + ',image/bmp,.bmp'}
           onChange={this.handleChange}
           disabled={disabled}
           style={{ display: 'none' }}
