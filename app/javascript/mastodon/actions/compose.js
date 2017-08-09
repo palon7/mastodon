@@ -177,8 +177,7 @@ export function uploadCompose(files) {
         };
         reader.readAsDataURL(files[0]);
       } catch (e) {
-        data.append('file', files[0]);
-        postMedia(data);
+        dispatch(uploadComposeFail(e));
       }
     } else {
       data.append('file', files[0]);
