@@ -140,7 +140,7 @@ export function uploadCompose(files) {
 
     let data = new FormData();
 
-    const postMedia = () => {
+    const postMedia = data => {
       api(getState).post('/api/v1/media', data, {
         onUploadProgress: function (e) {
           dispatch(uploadComposeProgress(e.loaded, e.total));
