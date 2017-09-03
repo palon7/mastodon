@@ -132,6 +132,71 @@ export function submitComposeFail(error) {
   };
 };
 
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    const removeEventListeners = () => {
+      reader.removeEventListener('error', handleError);
+      reader.removeEventListener('load', handleLoad);
+    };
+    const handleError = () => {
+      removeEventListeners();
+      reject(new Error(reader.error.name + ': failed to read file'));
+    };
+    const handleLoad = () => {
+      removeEventListeners();
+      resolve(reader.result);
+    };
+    reader.addEventListener('error', handleError);
+    reader.addEventListener('load', handleLoad);
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadImageAsDataURL(src, type) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const removeEventListeners = () => {
+      image.removeEventListener('error', handleError);
+      image.removeEventListener('load', handleLoad);
+    };
+    const handleError = ev => {
+      removeEventListeners();
+      reject(new Error(ev.type + ': failed to load image'));
+    };
+    const handleLoad = () => {
+      removeEventListeners();
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      canvas.getContext('2d').drawImage(image, 0, 0);
+      resolve(canvas.toDataURL(type));
+    };
+    image.addEventListener('error', handleError);
+    image.addEventListener('load', handleLoad);
+    image.src = src;
+  });
+}
+
+function dataURLToBlob(dataURL) {
+  return new Promise((resolve, reject) => {
+    const matches = dataURL.match(/^data:(.*?)(;base64)?,/);
+    if (matches) {
+      const type = matches[1] || 'text/plain;charset=US-ASCII';
+      const isBase64 = !!matches[2];
+      const data = dataURL.slice(matches[0].length);
+      const rawData = isBase64 ? window.atob(data) : decodeURIComponent(data);
+      const array = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        array[i] = rawData.charCodeAt(i);
+      }
+      resolve(new Blob([array.buffer], { type: type }));
+    } else {
+      reject(new Error('invalid data URL'));
+    }
+  });
+}
+
 export function uploadCompose(files) {
   return function (dispatch, getState) {
     if (getState().getIn(['compose', 'media_attachments']).size > 3) {
@@ -141,17 +206,34 @@ export function uploadCompose(files) {
     dispatch(uploadComposeRequest());
 
     let data = new FormData();
-    data.append('file', files[0]);
 
-    api(getState).post('/api/v1/media', data, {
-      onUploadProgress: function (e) {
-        dispatch(uploadComposeProgress(e.loaded, e.total));
-      },
-    }).then(function (response) {
-      dispatch(uploadComposeSuccess(response.data));
-    }).catch(function (error) {
-      dispatch(uploadComposeFail(error));
-    });
+    const postMedia = data => {
+      api(getState).post('/api/v1/media', data, {
+        onUploadProgress: function (e) {
+          dispatch(uploadComposeProgress(e.loaded, e.total));
+        },
+      }).then(function (response) {
+        dispatch(uploadComposeSuccess(response.data));
+      }).catch(function (error) {
+        dispatch(uploadComposeFail(error));
+      });
+    };
+
+    if (files[0].type === 'image/bmp') {
+      readFileAsDataURL(files[0]).then(dataURL => {
+        return loadImageAsDataURL(dataURL, 'image/png');
+      }).then(dataURL => {
+        return dataURLToBlob(dataURL);
+      }).then(blob => {
+        data.append('file', blob, files[0].name + '.png');
+        postMedia(data);
+      }).catch(error => {
+        dispatch(uploadComposeFail(error));
+      });
+    } else {
+      data.append('file', files[0]);
+      postMedia(data);
+    }
   };
 };
 
